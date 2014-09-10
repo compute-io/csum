@@ -19,14 +19,25 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 To use the module,
 
 ``` javascript
-var lib = require( 'compute-csum' );
+var csum = require( 'compute-csum' );
 ```
 
 
 ## Examples
 
 ``` javascript
-var lib = require( 'compute-csum' );
+var data = new Array( 1000 );
+
+for ( var i = 0; i < data.length; i++ ) {
+	data[ i ] = Math.round( Math.random()*100 );
+}
+
+data.sort( function sort( a, b ) {
+	return a - b;
+});
+
+console.log( csum( data ) );
+// Returns [...]
 ```
 
 To run the example code from the top-level application directory,
@@ -34,6 +45,11 @@ To run the example code from the top-level application directory,
 ``` bash
 $ node ./examples/index.js
 ```
+
+
+## Notes
+
+The method returns an `array` with a length equal to the original input array.
 
 
 ## Tests

@@ -25,7 +25,12 @@
   "keywords": [
     "compute.io",
     "compute",
-    "computation"
+    "computation",
+    "statistics",
+    "stats",
+    "cdf",
+    "cumulative sum",
+    "sum"
   ],
   "bugs": {
     "url": "https://github.com/compute-io/csum/issues"
