@@ -2,7 +2,7 @@ csum
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Computes the cumulative sum over an array of values.
+> Computes the cumulative sum of a numeric array.
 
 
 ## Installation
@@ -22,10 +22,23 @@ To use the module,
 var csum = require( 'compute-csum' );
 ```
 
+#### csum( arr )
+
+Computes the cumulative sum of a numeric `array`.
+
+``` javascript
+var data = [ 1, 2, 3, 4 ];
+
+csum( data );
+// returns [ 1, 3, 6, 10 ]
+```
+
 
 ## Examples
 
 ``` javascript
+var csum = require( 'compute-csum' );
+
 var data = new Array( 1000 );
 
 for ( var i = 0; i < data.length; i++ ) {
@@ -37,7 +50,7 @@ data.sort( function sort( a, b ) {
 });
 
 console.log( csum( data ) );
-// Returns [...]
+// returns [...]
 ```
 
 To run the example code from the top-level application directory,
@@ -49,7 +62,7 @@ $ node ./examples/index.js
 
 ## Notes
 
-The method returns an `array` with a length equal to the original input array.
+The function returns an `array` with a length equal to the original input `array`.
 
 
 ## Tests
@@ -76,7 +89,7 @@ $ make test-cov
 Istanbul creates a `./reports/coverage` directory. To access an HTML version of the report,
 
 ``` bash
-$ open reports/coverage/lcov-report/index.html
+$ make view-cov
 ```
 
 

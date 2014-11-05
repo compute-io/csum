@@ -1,3 +1,4 @@
+'use strict';
 
 // MODULES //
 
@@ -17,7 +18,6 @@ var expect = chai.expect,
 // TESTS //
 
 describe( 'compute-csum', function tests() {
-	'use strict';
 
 	it( 'should export a function', function test() {
 		expect( csum ).to.be.a( 'function' );
@@ -25,15 +25,15 @@ describe( 'compute-csum', function tests() {
 
 	it( 'should throw an error if provided a non-array', function test() {
 		var values = [
-				'5',
-				5,
-				true,
-				undefined,
-				null,
-				NaN,
-				function(){},
-				{}
-			];
+			'5',
+			5,
+			true,
+			undefined,
+			null,
+			NaN,
+			function(){},
+			{}
+		];
 
 		for ( var i = 0; i < values.length; i++ ) {
 			expect( badValue( values[i] ) ).to.throw( TypeError );

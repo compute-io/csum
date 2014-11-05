@@ -1,7 +1,7 @@
 {
   "name": "compute-csum",
   "version": "1.0.0",
-  "description": "Computes the cumulative sum over an array of values.",
+  "description": "Computes the cumulative sum of a numeric array.",
   "author": {
     "name": "Athan Reines",
     "email": "kgryte@gmail.com"
@@ -28,8 +28,10 @@
     "computation",
     "statistics",
     "stats",
+    "mathematics",
+    "math",
     "cdf",
-    "cumulative sum",
+    "cumulative",
     "sum"
   ],
   "bugs": {

@@ -1,3 +1,5 @@
+'use strict';
+
 var csum = require( './../lib' );
 
 var data = new Array( 1000 );
@@ -11,4 +13,4 @@ data.sort( function sort( a, b ) {
 });
 
 console.log( csum( data ) );
-// Returns [...]
+// returns [...]
