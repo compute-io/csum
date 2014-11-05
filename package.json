@@ -1,6 +1,6 @@
 {
   "name": "compute-csum",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Computes the cumulative sum of a numeric array.",
   "author": {
     "name": "Athan Reines",
