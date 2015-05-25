@@ -55,5 +55,5 @@
     "jshint": "2.x.x",
     "jshint-stylish": "^1.0.0"
   },
-  "licenses": "MIT"
+  "license": "MIT"
 }
