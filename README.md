@@ -21,7 +21,7 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 var csum = require( 'compute-csum' );
 ```
 
-#### csum( arr[, accessor] )
+#### csum( arr[, options] )
 
 Computes the cumulative sum of the values in the input `array`. For numeric `arrays`,
 
@@ -31,6 +31,26 @@ var data = [ 1, 2, 3, 4 ];
 csum( data );
 // returns [ 1, 3, 6, 10 ]
 ```
+
+The function accepts two `options`:
+
+*  __copy__: `boolean` indicating whether to return a new `array` containing the computed means. Default: `true`.
+*  __accessor__: accessor `function` for accessing numerical values in object `arrays`.
+
+To mutate the input `array` (e.g. when input values can be discarded or when optimizing memory usage), set the `copy` option to `false`.
+
+``` javascript
+var data = [ 1, 2, 3, 4 ];
+
+var values = csum( data, 2, {
+	'copy': false
+});
+//returns [ 1, 3, 6, 10 ]
+
+console.log( data === values );
+//returns true
+```
+
 
 For non-numeric `arrays`, provide an accessor `function` for accessing `numeric` values.
 
@@ -46,7 +66,9 @@ function getValue( d ) {
 	return d.x;
 }
 
-var sum = csum( arr, getValue );
+var sum = csum( arr, {
+	'accessor': getValue
+});
 // returns [ 1, 3, 6, 10 ]
 ```
 
