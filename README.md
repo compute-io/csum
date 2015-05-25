@@ -16,15 +16,14 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 
 ## Usage
 
-To use the module,
 
 ``` javascript
 var csum = require( 'compute-csum' );
 ```
 
-#### csum( arr )
+#### csum( arr[, accessor] )
 
-Computes the cumulative sum of a numeric `array`.
+Computes the cumulative sum of the values in the input `array`. For numeric `arrays`,
 
 ``` javascript
 var data = [ 1, 2, 3, 4 ];
@@ -33,6 +32,26 @@ csum( data );
 // returns [ 1, 3, 6, 10 ]
 ```
 
+For non-numeric `arrays`, provide an accessor `function` for accessing `numeric` values.
+
+``` javascript
+var arr = [
+	{'x':1},
+	{'x':2},
+	{'x':3},
+	{'x':4},
+];
+
+function getValue( d ) {
+	return d.x;
+}
+
+var sum = csum( arr, getValue );
+// returns [ 1, 3, 6, 10 ]
+```
+
+
+__Note__: if provided an empty `array`, the function returns `null`.
 
 ## Examples
 
@@ -69,7 +88,7 @@ The function returns an `array` with a length equal to the original input `array
 
 ### Unit
 
-Unit tests use the [Mocha](http://visionmedia.github.io/mocha) test framework with [Chai](http://chaijs.com) assertions. To run the tests, execute the following command in the top-level application directory:
+Unit tests use the [Mocha](http://mochajs.org) test framework with [Chai](http://chaijs.com) assertions. To run the tests, execute the following command in the top-level application directory:
 
 ``` bash
 $ make test
@@ -93,15 +112,15 @@ $ make view-cov
 ```
 
 
+---
 ## License
 
-[MIT license](http://opensource.org/licenses/MIT). 
+[MIT license](http://opensource.org/licenses/MIT).
 
 
----
 ## Copyright
 
-Copyright &copy; 2014. Athan Reines.
+Copyright &copy; 2014-2015. The Compute.io Authors.
 
 
 [npm-image]: http://img.shields.io/npm/v/compute-csum.svg
