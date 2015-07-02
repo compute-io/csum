@@ -2,7 +2,7 @@ csum
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Computes the cumulative sum of a numeric array.
+> Computes the cumulative sum.
 
 
 ## Installation
@@ -21,36 +21,24 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 var csum = require( 'compute-csum' );
 ```
 
-#### csum( arr[, options] )
+#### csum( x[, options] )
 
-Computes the cumulative sum of the values in the input `array`. For numeric `arrays`,
+Computes the cumulative sum. `x` may be either an [`array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), [`typed array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays), or [`matrix`](https://github.com/dstructs/matrix).
 
 ``` javascript
-var data = [ 1, 2, 3, 4 ];
+var data, arr;
 
-csum( data );
+data = [ 1, 2, 3, 4 ];
+arr = csum( data );
 // returns [ 1, 3, 6, 10 ]
 ```
 
-The function accepts two `options`:
+The function accepts the following `options`:
 
-*  __copy__: `boolean` indicating whether to return a new `array` containing the cumulate sums. Default: `true`.
+*  __copy__: `boolean` indicating whether to return a new data structure containing the cumulative sums. Default: `true`.
 *  __accessor__: accessor `function` for accessing numerical values in object `arrays`.
-
-To mutate the input `array` (e.g. when input values can be discarded or when optimizing memory usage), set the `copy` option to `false`.
-
-``` javascript
-var data = [ 1, 2, 3, 4 ];
-
-var values = csum( data, 2, {
-	'copy': false
-});
-//returns [ 1, 3, 6, 10 ]
-
-console.log( data === values );
-//returns true
-```
-
+*  __dim__: dimension along which to compute the cumulative sum when provided a matrix. Default: `2` (along the columns).
+*  __dtype__: output data type. Default: `float64`.
 
 For non-numeric `arrays`, provide an accessor `function` for accessing `numeric` values.
 
@@ -72,16 +60,129 @@ var sum = csum( arr, {
 // returns [ 1, 3, 6, 10 ]
 ```
 
+__Note__: the function returns an `array` with a length equal to the original input `array`.
 
-__Note__: if provided an empty `array`, the function returns `null`.
+By default, the function computes the cumulative sum for a [`matrix`](https://github.com/dstructs/matrix) along the columns (`dim=2`).
+
+``` javascript
+var matrix = require( 'dstructs-matrix' ),
+	data,
+	mat,
+	out,
+	i;
+
+data = new Int8Array( 9 );
+for ( i = 0; i < data.length; i++ ) {
+	data[ i ] = i;
+}
+mat = matrix( data, [3,3], 'int8' );
+/*
+	[  0  1  2  
+	   3  4  5
+	   6  7  8 ]
+*/
+
+out = csum( mat );
+/*
+	[  0   1   3  
+	   3   7  12
+	   6  13  21 ]
+*/
+```
+
+To compute the cumulative sum along the rows, set the `dim` option to `1`.
+
+``` javascript
+out = csum( mat, {
+	'dim': 1
+});
+/*
+	[  0   1   2
+	   3   5   7
+	   9  12  15 ]
+*/
+```
+
+By default, the output data type is `float64`. To specify a different data type, set the `dtype` option (see [`matrix`](https://github.com/dstructs/matrix) for a list of acceptable data types).
+
+``` javascript
+out = csum( mat, {
+	'dim': 1,
+	'dtype': 'uint8'
+});
+/*
+	[  0   1   2
+	   3   5   7
+	   9  12  15 ]
+*/
+
+var dtype = mu.dtype;
+// returns 'uint8'
+
+out = csum( [ 1, 2, 3, 4 ], {
+	'dtype': 'uint8'
+})
+// returns Uint8Array( [ 1,3,6,10] )
+```
+
+By default, the function returns a new data structure. To mutate the input data structure (e.g., when input values can be discarded or when optimizing memory usage), set the `copy` option to `false`.
+
+``` javascript
+var data,
+	bool,
+	mat,
+	out,
+	i;
+
+data = [ 1, 2, 3, 4 ];
+
+out = csum( data, {
+	'copy': false
+});
+// returns [ 1, 3, 6, 10 ]
+
+bool = ( data === out );
+// returns true
+
+data = new Int16Array( 9 );
+for ( i = 0; i < 9; i++ ) {
+	data[ i ] = i;
+}
+mat = matrix( data, [3,3], 'int16' );
+/*
+	[  0  1  2  
+	   3  4  5
+	   6  7  8 ]
+*/
+
+out = csum( mat, {
+	'copy': false
+});
+/*
+	[  0   1   3  
+	   3   7  12
+	   6  13  21 ]
+*/
+
+bool = ( mat === out );
+// returns true
+```
 
 ## Examples
 
 ``` javascript
-var csum = require( 'compute-csum' );
+var matrix = require( 'dstructs-matrix' ),
+	csum = require( 'compute-csum' ),
+	cast = require( 'compute-cast-arrays' );
 
+var data,
+	mat,
+	out,
+	tmp,
+	i;
+
+// Plain arrays...
 var data = new Array( 1000 );
-
 for ( var i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.round( Math.random()*100 );
 }
@@ -90,8 +191,52 @@ data.sort( function sort( a, b ) {
 	return a - b;
 });
 
-console.log( csum( data ) );
-// returns [...]
+out = csum( data );
+
+// Object arrays (accessors)...
+function getValue( d ) {
+	return d.x;
+}
+for ( i = 0; i < data.length; i++ ) {
+	data[ i ] = {
+		'x': data[ i ]
+	};
+}
+out = csum( data, {
+	'accessor': getValue
+});
+
+// Typed arrays...
+var data = new Array( 1000 );
+for ( var i = 0; i < data.length; i++ ) {
+	data[ i ] = Math.round( Math.random()*100 );
+}
+data.sort( function sort( a, b ) {
+	return a - b;
+});
+var data = cast( data, 'int32' );
+tmp = csum( data );
+out = '';
+for ( i = 0; i < data.length; i++ ) {
+	out += tmp[ i ];
+	if ( i < data.length-1 ) {
+		out += ',';
+	}
+}
+
+// Matrices...
+mat = matrix( data, [100, 10], 'int32' );
+out = csum( mat );
+console.log( 'Matrix (along columns): %s\n', out.toString() );
+
+out = csum( mat, {
+	'dim': 1
+});
+
+// Matrices (custom output data type)...
+out = csum( mat, {
+	'dtype': 'uint8'
+});
 ```
 
 To run the example code from the top-level application directory,
@@ -142,8 +287,7 @@ $ make view-cov
 
 ## Copyright
 
-Copyright &copy; 2014-2015. The Compute.io Authors.
-
+Copyright &copy; 2014-2015. The [Compute.io](https://github.com/compute-io) Authors.
 
 [npm-image]: http://img.shields.io/npm/v/compute-csum.svg
 [npm-url]: https://npmjs.org/package/compute-csum
